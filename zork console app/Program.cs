@@ -51,15 +51,20 @@
             Console.WriteLine("PAUL>> Hello my name is P.A.U.L. Welcome to the main fraim");
             Console.WriteLine($"The Main Frame has {numRows} rows and {numCols} columns.");
             Console.WriteLine($"The entrance is in cell (0,0) and the exit is in cell ({exitRow},{numCols - 1}).");
-
-            // loop until paul exits or dies
+            Console.WriteLine("I start with 100 health points and once I go down we loose.");
+            Console.WriteLine("theere is a map on your screen to the left. P is where I am in the server. ");
+            Console.WriteLine("H is where a hack is. this will increase my damage ability.");
+            Console.WriteLine("F is where a firewall is. I have to fight these before I can go to a new server.");
+            Console.WriteLine("Our goal is to find the password for the master server located at M          . The issue is it is hidden");
+            Console.WriteLine("In one of these servers. Guide me to that and to the master server and we win!");
+            // loop until paul exits dies
             while (true)
             {
                 Console.WriteLine("PAUL>> Which way should I go?");
-                Console.WriteLine("go north");
-                Console.WriteLine("go south");
-                Console.WriteLine("go east");
-                Console.WriteLine("go west");
+                Console.WriteLine("go up");
+                Console.WriteLine("go down");
+                Console.WriteLine("go left");
+                Console.WriteLine("go right");
                 Console.Write("Enter a command: ");
                 string input = Console.ReadLine().ToLower();
 
@@ -74,7 +79,7 @@
                             {
                                 currentRow--;
                                 Console.WriteLine($"PAUL>> I have moved up to cell ({currentRow},{currentColumn}).");
-                                if (currentServer.HasFirewall() && !currentServer.FirewallDefeated())
+                                if (currentServer.GetHasFirewall() && !currentServer.FirewallDefeated())
                                 {
                                     Console.WriteLine("PAUL>> There is a firewall in the way");
                                     Console.WriteLine("Press any key to fight");
@@ -101,7 +106,7 @@
                             {
                                 currentRow++;
                                 Console.WriteLine($"PAUL>> I have moved down to cell ({currentRow},{currentColumn}).");
-                                if (currentServer.HasFirewall() && !currentServer.FirewallDefeated())
+                                if (currentServer.GetHasFirewall() && !currentServer.FirewallDefeated())
                                 {
                                     Console.Write("PAUL>> There is a firewall in the way. ");
                                     Console.Write("Press any key to fight");
@@ -127,7 +132,7 @@
                             {
                                 currentColumn++;
                                 Console.WriteLine($"PAUL>> I have moved left to cell ({currentRow},{currentColumn}).");
-                                if (currentServer.HasFirewall() && !currentServer.FirewallDefeated())
+                                if (currentServer.GetHasFirewall() && !currentServer.FirewallDefeated())
                                 {
                                     Console.WriteLine("PAUL>> There is a firewall in the way");
                                     Console.WriteLine("Press any key to fight");
@@ -153,7 +158,7 @@
                             {
                                 currentColumn--;
                                 Console.WriteLine($"PAUL>> I have moved right to cell ({currentRow},{currentColumn}).");
-                                if (currentServer.HasFirewall() && !currentServer.FirewallDefeated())
+                                if (currentServer.GetHasFirewall() && !currentServer.FirewallDefeated())
                                 {
                                     Console.WriteLine("PAUL>> There is a firewall in the way");
                                     Console.WriteLine("Press any key to fight");
@@ -201,13 +206,14 @@
 
             // Track whether a password has been added to a server
             bool hasPassword = false;
-
+            bool hasfirewall = false;
             for (int row = 0; row < numRows; row++)
             {
                 for (int col = 0; col < numCols; col++)
                 {
                     Server server = new Server();
-                    server.HasFirewall();
+                    hasfirewall = true;
+                    server.SetHasFirewall(hasfirewall);
                     if (!server.HasHack() && !server.HasPassword())
                     {
                         // 20% chance to add a hack
@@ -215,7 +221,7 @@
                         {
                             server.GenerateHack();
                         }
-                        else if (!hasPassword && rand.Next(1, 11) == 1)
+                        else if (!hasPassword && server.GetHasFirewall() && rand.Next(1, 11) == 1)
                         {
                             string password = server.GeneratePassword();
                             server.SetPassword(password);

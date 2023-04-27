@@ -16,7 +16,7 @@ namespace zork_console_app
         private bool isFinalServer;
         private IHack hack;
         private string password;
-        string[] hackNames = { "Doomsday", "SQL Injection", "DDoS", "Malware-Injection" };
+        string[] hackNames = { "Doomsday", "SQL Injection", "DDoS", "Malware-Injection", "Bruteforce" };
         public Server()
         {
             Random rand = new Random();
@@ -41,9 +41,13 @@ namespace zork_console_app
                 hasHack = false;
             }
         }
-        public bool HasFirewall()
-        {
+        public bool GetHasFirewall()
+        { 
             return hasFirewall;
+        }
+        public void SetHasFirewall(bool firewall)
+        {
+            hasFirewall = firewall;
         }
         public bool FirewallDefeated()
         {
@@ -96,6 +100,9 @@ namespace zork_console_app
                     break;
                 case "Malware-Injection":
                     hack = new MalwareInjection();
+                    break;
+                case "Bruteforce":
+                    hack = new Bruteforce();
                     break;
             }
             hasHack = true;
