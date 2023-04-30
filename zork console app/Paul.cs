@@ -1,4 +1,14 @@
-﻿using System;
+﻿/**
+*--------------------------------------------------------------------
+* File name: {Paul.cs}
+* Project name: {Project 5 - Zork}
+*--------------------------------------------------------------------
+* Author’s name and email: {Daniel Lynch lynchda@etsu.edu}
+* Course-Section: {002}
+* Creation Date: {4/29/2023}
+* -------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +17,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace zork_console_app
 {
-    internal class Paul
+    public class Paul
     {
         private int health { get; set; }
         private int damage { get; set; }
@@ -21,6 +31,10 @@ namespace zork_console_app
         public int GetHealth()
         {
             return health;
+        }
+        public int GetDamage()
+        {
+            return damage;
         }
 
         public void TakeDamage(int damageTaken)

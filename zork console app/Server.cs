@@ -1,4 +1,14 @@
-﻿using System;
+﻿/**
+*--------------------------------------------------------------------
+* File name: {Server.cs}
+* Project name: {Project 5 - Zork}
+*--------------------------------------------------------------------
+* Author’s name and email: {Daniel Lynch lynchda@etsu.edu}
+* Course-Section: {002}
+* Creation Date: {4/29/2023}
+* -------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,43 +16,39 @@ using System.Threading.Tasks;
 
 namespace zork_console_app
 {
-    internal class Server
+    public class Server
     {
         private bool hasFirewall;
         private int firewallHealth;
         private bool firewallDefeated;
         private bool hasHack;
-        private bool hasPassword;
         private bool isFinalServer;
         private IHack hack;
-        private string password;
-        string[] hackNames = { "Doomsday", "SQL Injection", "DDoS", "Malware-Injection", "Bruteforce" };
+
+        private string[] hackNames = { "Doomsday", "SQL Injection", "DDoS", "Malware-Injection", "Bruteforce" };
+
         public Server()
         {
-            Random rand = new Random();
-            hasFirewall = rand.Next(1, 3) == 1;
-
+            hasFirewall = false;
+            firewallHealth = 0;
+            hasHack = false;
+            isFinalServer = false;
+        }
+        public int SetFirewallHealth(int health)
+        {
+            firewallHealth = health;
+            return firewallHealth;
+        }
+        public void HasFirewall(bool hasFirewall)
+        {
+            this.hasFirewall = hasFirewall;
             if (hasFirewall)
             {
                 firewallHealth = 20;
             }
-
-            if (!hasFirewall && rand.Next(1, 5) == 1)
-            {
-                hasHack = true;
-                GenerateHack();
-                if (rand.Next(1, 5) == 1)
-                {
-                    TrySpawnHack();
-                }
-            }
-            else
-            {
-                hasHack = false;
-            }
         }
         public bool GetHasFirewall()
-        { 
+        {
             return hasFirewall;
         }
         public void SetHasFirewall(bool firewall)
@@ -70,16 +76,10 @@ namespace zork_console_app
                 return null;
             }
         }
-        public bool HasPassword()
+        public void SetIsFinalServer(bool finalServer)
         {
-            return hasPassword;
+            isFinalServer = finalServer;
         }
-
-        public void SetPassword(string password)
-        {
-           this.password = password;
-        }
-
         public bool IsFinalServer()
         {
             return isFinalServer;
@@ -109,29 +109,21 @@ namespace zork_console_app
         }
         public string TrySpawnHack()
         {
-            // Try to spawn a weapon with 30% chance
             Random rand = new Random();
             if (rand.Next(1, 5) == 1)
             {
-                return hackNames[rand.Next(hackNames.Length)];
                 hasHack = true;
+                return hackNames[rand.Next(hackNames.Length)];
             }
             return null;
         }
-        public string GeneratePassword()
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            Random rand = new Random();
-            return new string(Enumerable.Repeat(chars, 5).Select(s => s[rand.Next(s.Length)]).ToArray());
-        }
-        public void Fight(int health)
+        public void Fight(int health, int paulHitDamage)
         {
             if (hasFirewall && !firewallDefeated)
             {
                 while (health > 0 && firewallHealth > 0)
                 {
                     Console.WriteLine("Player's turn:");
-                    // represents a 10% chance of missing the Firewall
                     int hitChance = new Random().Next(1, 11);
 
                     if (hitChance == 1)
@@ -141,11 +133,9 @@ namespace zork_console_app
                     else
                     {
                         Console.WriteLine("a hit!");
-                        firewallHealth -= 5;
+                        firewallHealth -= paulHitDamage;
                     }
-
                     Console.WriteLine("Monster's turn:");
-                    // Generate a random number between 1 and 5, representing a 20% chance of missing the player
                     hitChance = new Random().Next(1, 6);
 
                     if (hitChance == 1)
@@ -157,7 +147,6 @@ namespace zork_console_app
                         Console.WriteLine("The player is hit.");
                         health -= 4;
                     }
-
                     Console.WriteLine("Player health: " + health);
                     Console.WriteLine("Monster health: " + firewallHealth);
                 }
